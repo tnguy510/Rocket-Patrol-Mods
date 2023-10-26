@@ -10,15 +10,31 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth:64, frameHeight: 32,
         startFrame: 0, endFrame: 9});
+        this.load.spritesheet('sonicDeath', './assets/death.png', {frameWidth: 29, frameHeight: 29,
+        startFrame: 0, endFrame: 5});
+        this.load.image('particle', './assets/fire.png');
+        this.load.image('sonic', './assets/sonic.png');
 
     }
 
     create() {
+
         //place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
         //green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
             borderUISize * 2, 0x00FF00).setOrigin(0,0);
+
+        //add spaceships(x4)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4,
+            'spaceship', 0, 30).setOrigin(0, 0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 +
+            borderPadding*2, 'spaceship', 0, 20).setOrigin(0, 0);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4,
+            'spaceship', 0, 10).setOrigin(0,0);
+        this.ship04 = new SonicSpaceship(this, game.config.width, borderUISize*8 + borderPadding*4,
+            'sonic', 0, 100).setOrigin(0,0);
+
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0,0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize,
@@ -26,6 +42,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height,
             0xFFFFFF).setOrigin(0, 0);
+            
         //  add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize -
         borderPadding, 'rocket').setOrigin(0.5,0);
@@ -35,18 +52,17 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        //add spaceships(x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4,
-            'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 +
-            borderPadding*2, 'spaceship', 0, 20).setOrigin(0, 0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4,
-            'spaceship', 0, 10).setOrigin(0,0);
 
         //animation config
         this.anims.create({
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 9, first: 0}),
+            frameRate: 30
+        });
+
+        this.anims.create({
+            key: 'death',
+            frames: this.anims.generateFrameNumbers('sonicDeath', {start: 0, end: 5, first: 0}),
             frameRate: 30
         });
 
@@ -80,6 +96,30 @@ class Play extends Phaser.Scene {
             scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        //30 second SPeed up Timer 
+        this.speedUp = this.time.delayedCall(game.settings.speedTimer, () => {
+            this.ship01.moveSpeed *= 2;
+            this.ship02.moveSpeed *= 2;
+            this.ship03.moveSpeed *= 2;
+        }, null, this);
+
+        //Displaying Clock
+        let clockConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'left',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.gameCountdown = game.settings.gameTimer
+        this.clockRight = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2,
+            this.gameCountdown, clockConfig)//.setOrigin(5, 0);
     }
 
     update() {
@@ -96,9 +136,11 @@ class Play extends Phaser.Scene {
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
         }
         //check collision
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
+        //create explosion sprite at ship's position
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
         }
@@ -110,6 +152,20 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
+
+        if (this.checkCollision(this.p1Rocket, this.ship04)) {
+            this.p1Rocket.reset();
+            this.sonicDeath(this.ship04);
+        }
+        //Updating clock
+        //this.clockRight.text -= 10;
+        if(!this.gameOver){
+            this.gameCountdown -= 17;
+            //this.gameCountdown *= 0.01;
+            this.clockRight.text = (this.gameCountdown) * 0.001;
+            //this.clockRight.text = Math.round(this.gameCountdown);
+        }
+
     }
 
     checkCollision(rocket, ship){
@@ -127,7 +183,7 @@ class Play extends Phaser.Scene {
     shipExplode(ship) {
         //temporarily hide ship
         ship.alpha = 0;
-        //create explosion sprite at ship's position
+
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');
         boom.on('animationcomplete', () => {
@@ -139,6 +195,27 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+        this.gameCountdown += 5000;
     }
 
+    sonicDeath(ship) {
+        //temporarily hide ship
+        ship.alpha = 0;
+
+        let dead = this.add.sprite(ship.x, ship.y, 'sonicDeath').setOrigin(0, 0);
+        dead.anims.play('death');
+        dead.on('animationcomplete', () => {
+            ship.reset();
+            ship.alpha = 1;
+            dead.destroy();
+        });
+        //score add and repaint
+        this.p1Score += ship.points;
+        this.scoreLeft.text = this.p1Score;
+        this.sound.play('sfx_explosion');
+        this.gameCountdown += 8000;
+    }
+
+    
+//
  }

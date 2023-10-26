@@ -7,12 +7,13 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.image('space', './assets/title screen.png');
     }
     create(){
         //this.add.text(20,20, "Rocket Patrol Menu");
         //this.scene.start("playScene");
         let menuConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Helvetica',
             fontSize: '28px',
             backgroundColor: '#F3B141',
             color: '#843605',
@@ -24,9 +25,13 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
 
+        this.space = this.add.tileSprite(0, 0, 640, 480, 'space').setOrigin(0,0);
+
         //show menu text
+        this.add.text(game.config.width/2, game.config.height/3 - borderUISize - 
+        borderPadding, 'ROCKET PATROL ENHANCED BUT NOT REALLY', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 - borderUISize - 
-        borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
+        borderPadding, 'BUT NOT REALLY', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use <-> arrows to move & (F) to fire', 
         menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
@@ -43,7 +48,9 @@ class Menu extends Phaser.Scene {
           // easy mode
             game.settings = {
             spaceshipSpeed: 3,
-            gameTimer: 60000    
+            sonicSpeed: 1,
+            gameTimer: 60000,
+            speedTimer: 30000   
           }
           this.sound.play('sfx_select');
           this.scene.start('playScene');    
@@ -52,7 +59,8 @@ class Menu extends Phaser.Scene {
           // hard mode
             game.settings = {
             spaceshipSpeed: 4,
-            gameTimer: 45000    
+            gameTimer: 45000,
+            speedTimer: 30000    
           }
           this.sound.play('sfx_select');
           this.scene.start('playScene');    
