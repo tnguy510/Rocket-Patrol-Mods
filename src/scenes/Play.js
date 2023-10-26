@@ -12,13 +12,11 @@ class Play extends Phaser.Scene {
         startFrame: 0, endFrame: 9});
         this.load.spritesheet('sonicDeath', './assets/death.png', {frameWidth: 29, frameHeight: 29,
         startFrame: 0, endFrame: 5});
-        this.load.image('particle', './assets/fire.png');
         this.load.image('sonic', './assets/sonic.png');
 
     }
 
     create() {
-
         //place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
         //green UI background
@@ -69,6 +67,9 @@ class Play extends Phaser.Scene {
         //initialize score
         this.p1Score = 0;
         //display score
+        this.hitBonus = 0;
+        this.explosionSFX = ['sfx_explosion1', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4'];
+        
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
@@ -102,6 +103,7 @@ class Play extends Phaser.Scene {
             this.ship01.moveSpeed *= 2;
             this.ship02.moveSpeed *= 2;
             this.ship03.moveSpeed *= 2;
+            this.ship04.moveSpeed *= 2;
         }, null, this);
 
         //Displaying Clock
@@ -183,6 +185,7 @@ class Play extends Phaser.Scene {
     shipExplode(ship) {
         //temporarily hide ship
         ship.alpha = 0;
+        this.hitBonus += 1;
 
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');
@@ -194,13 +197,18 @@ class Play extends Phaser.Scene {
         //score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
-        this.gameCountdown += 5000;
+        this.sound.play(Phaser.Math.RND.pick(this.explosionSFX));
+        //Phaser.Math.RND.pick([['sfx_explosion1', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4']])
+        if(this.hitBonus >= 3){
+            this.gameCountdown += 5000;
+            this.hitBonus = 0;
+        }
     }
 
     sonicDeath(ship) {
         //temporarily hide ship
         ship.alpha = 0;
+        this.hitBonus += 1;
 
         let dead = this.add.sprite(ship.x, ship.y, 'sonicDeath').setOrigin(0, 0);
         dead.anims.play('death');
@@ -212,10 +220,11 @@ class Play extends Phaser.Scene {
         //score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
+        this.sound.play(Phaser.Math.RND.pick(this.explosionSFX));
         this.gameCountdown += 8000;
+        if(this.hitBonus >= 3){
+            this.gameCountdown += 5000;
+            this.hitBonus = 0;
+        }
     }
-
-    
-//
  }

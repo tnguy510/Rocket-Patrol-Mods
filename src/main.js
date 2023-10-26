@@ -1,6 +1,6 @@
 //Trish Nguyen
 //Rocket Patrol, Enhanced Edition But Not Really!
-//Implemented that hitting a ship will add time to clock(5)
+//Implemented that after hitting 3 ships 5 seconds will add time to clock(5)
 //Display the time remaining (in seconds) on the screen (3) (But also it doesn't accurate tell the time)
 //Implement the speed increase that happens after 30 seconds in the original game (1)
 //Create a new title screen (e.g., new artwork, typography, layout) (3)
