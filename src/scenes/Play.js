@@ -121,7 +121,11 @@ class Play extends Phaser.Scene {
         }
         this.gameCountdown = game.settings.gameTimer
         this.clockRight = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2,
+<<<<<<< HEAD
             this.gameCountdown, clockConfig)
+=======
+            this.gameCountdown, clockConfig)//.setOrigin(5, 0);
+>>>>>>> 9ea7f03b809d51ec7406da0ea1c9189635d81801
     }
 
     update() {
@@ -159,6 +163,7 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.sonicDeath(this.ship04);
         }
+<<<<<<< HEAD
         if(!this.gameOver){
             this.gameCountdown -= 17;
             if(this.gameCountdown <= 0){
@@ -167,6 +172,15 @@ class Play extends Phaser.Scene {
             else{
                 this.clockRight.text = Phaser.Math.RoundTo((this.gameCountdown * 0.001), 0);
             }
+=======
+        //Updating clock
+        //this.clockRight.text -= 10;
+        if(!this.gameOver){
+            this.gameCountdown -= 17;
+            //this.gameCountdown *= 0.01;
+            this.clockRight.text = (this.gameCountdown) * 0.001;
+            //this.clockRight.text = Math.round(this.gameCountdown);
+>>>>>>> 9ea7f03b809d51ec7406da0ea1c9189635d81801
         }
 
     }
