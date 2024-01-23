@@ -7,7 +7,7 @@
     //Brennon Mulligan Voice: "I struck down Helvetica"
     //Also I made that cover art with my trackpad, never again.
 //Create a new enemy Spaceship type (w/ new artwork) that's smaller, moves faster, and is worth more points (5)
-    //Added Sonic the Hedgehog
+    //Added Sonic the Hedgehog.
 //Randomized explosion sounds between 4 different SFX (3)
     //All generate by jskr at https://sfxr.me/
 //Approximate Implemention time: 7 hours
