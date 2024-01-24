@@ -11,7 +11,7 @@
 //Randomized explosion sounds between 4 different SFX (3)
     //All generate by jskr at https://sfxr.me/
 //Approximate Implemention time: 7 hours
-    //Fixing Time from previous code: 1 hour
+    //Fixing Time from previous code: 2 hour
 
 let config = {
     type: Phaser.AUTO,
