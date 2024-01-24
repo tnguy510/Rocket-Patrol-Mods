@@ -70,35 +70,17 @@ class Play extends Phaser.Scene {
         this.hitBonus = 0;
         this.explosionSFX = ['sfx_explosion1', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4'];
         
-        let scoreConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 100
-        }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2,
             this.p1Score, scoreConfig);
 
         //GAME OVER flag
         this.gameOver = false;
 
-        //60 second play clock
+        //Countdown clock
+        this.gameCountdown = game.settings.gameTimer
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',
-            scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu',
-            scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-        }, null, this);
 
-        //30 second SPeed up Timer 
+        //30 second Speed up Timer 
         this.speedUp = this.time.delayedCall(game.settings.speedTimer, () => {
             this.ship01.moveSpeed *= 2;
             this.ship02.moveSpeed *= 2;
@@ -106,25 +88,18 @@ class Play extends Phaser.Scene {
             this.ship04.moveSpeed *= 2;
         }, null, this);
 
-        //Displaying Clock
-        let clockConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'left',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 100
-        }
-        this.gameCountdown = game.settings.gameTimer
         this.clockRight = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2,
             this.gameCountdown, clockConfig)
     }
 
     update() {
+        if(this.gameCountdown <= 0){
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',
+            scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu',
+            scoreConfig).setOrigin(0.5);
+            this.gameOver = true;
+        }
           // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -199,7 +174,6 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play(Phaser.Math.RND.pick(this.explosionSFX));
-        //Phaser.Math.RND.pick([['sfx_explosion1', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4']])
         if(this.hitBonus >= 3){
             this.gameCountdown += 5000;
             this.hitBonus = 0;

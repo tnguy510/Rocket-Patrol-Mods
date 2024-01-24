@@ -13,20 +13,18 @@ class Menu extends Phaser.Scene {
         this.load.image('space', './assets/title screen.png');
     }
     create(){
-        //this.add.text(20,20, "Rocket Patrol Menu");
-        //this.scene.start("playScene");
-        let menuConfig = {
-            fontFamily: 'Helvetica',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right', 
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 0
-        }
+      let menuConfig = {
+        fontFamily: 'Helvetica',
+        fontSize: '28px',
+        backgroundColor: '#F3B141',
+        color: '#843605',
+        align: 'right', 
+        padding: {
+          top: 5,
+          bottom: 5,
+        },
+        fixedWidth: 0
+      }
 
         this.space = this.add.tileSprite(0, 0, 640, 480, 'space').setOrigin(0,0);
 
