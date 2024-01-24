@@ -32,11 +32,7 @@ class Menu extends Phaser.Scene {
 
         //show menu text
         this.add.text(game.config.width/2, game.config.height/3 - borderUISize - 
-<<<<<<< HEAD
         borderPadding, 'ROCKET PATROL ENHANCED EDITION', menuConfig).setOrigin(0.5);
-=======
-        borderPadding, 'ROCKET PATROL ENHANCED BUT NOT REALLY', menuConfig).setOrigin(0.5);
->>>>>>> 9ea7f03b809d51ec7406da0ea1c9189635d81801
         this.add.text(game.config.width/2, game.config.height/2 - borderUISize - 
         borderPadding, 'BUT NOT REALLY', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use <-> arrows to move & (F) to fire', 
@@ -56,11 +52,7 @@ class Menu extends Phaser.Scene {
             game.settings = {
             spaceshipSpeed: 3,
             sonicSpeed: 5,
-<<<<<<< HEAD
-            gameTimer: 30000,
-=======
             gameTimer: 60000,
->>>>>>> 9ea7f03b809d51ec7406da0ea1c9189635d81801
             speedTimer: 30000   
           }
           this.sound.play('sfx_select');
